@@ -1,168 +1,577 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
-<meta name="google-site-verification" content="p4E6IsxwLHfYIpFn8qcFS5_9aBt0IVbNNf5V3vWB1UY" />
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="Likhamba Rongmei — Cloud Security & SOC Analyst. Hands-on security labs, writeups, and building toward a career in cloud defense."/>
-<title>Likhamba Rongmei — Cyber Security</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<meta name="description" content="Likhamba Rongmei — Cybersecurity practitioner. Blue team, cloud security, and offensive security in progress. Hands-on labs, writeups, and security research."/>
+<title>Likhamba Rongmei — Cybersecurity</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --bg:        #16120e;
-  --surface:   #1e1914;
-  --surface2:  #252019;
-  --border:    #2e2820;
-  --border2:   #3a3228;
-  --accent:    #d4845a;
-  --accent2:   #e8b87a;
-  --text:      #c4b8a8;
-  --heading:   #f0e8da;
-  --muted:     #7a6e62;
-  --tag-bg:    rgba(212,132,90,0.1);
-  --tag-color: #d4845a;
+  --bg:        #0d0f12;
+  --surface:   #131619;
+  --surface2:  #1a1e23;
+  --border:    #22272e;
+  --border2:   #2c333c;
+  --accent:    #4a9eff;
+  --accent2:   #7eb8ff;
+  --text:      #a8b4c0;
+  --heading:   #e8edf2;
+  --muted:     #5a6472;
+  --tag-bg:    rgba(74,158,255,0.08);
+  --tag-color: #4a9eff;
+  --green:     #3dd68c;
 }
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;font-size:17px;line-height:1.75;overflow-x:hidden;}
-a{color:inherit;text-decoration:none}
-img{max-width:100%;display:block}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.6;}
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box }
+html { scroll-behavior:smooth }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none }
+img { max-width: 100%; display: block }
+
+/* scanline texture — subtle only */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255,255,255,0.012) 2px,
+    rgba(255,255,255,0.012) 3px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2.5rem;background:rgba(22,18,14,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
-.nav-logo{font-family:'DM Mono',monospace;font-size:0.85rem;color:var(--accent);letter-spacing:0.05em;}
-.nav-links{display:flex;gap:2.2rem;list-style:none;}
-.nav-links a{font-size:0.82rem;font-weight:400;color:var(--muted);letter-spacing:0.04em;transition:color 0.2s;}
-.nav-links a:hover{color:var(--heading)}
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.1rem 2.5rem;
+  background: rgba(13,15,18,0.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+.nav-links { display: flex; gap: 2rem; list-style: none }
+.nav-links a {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  transition: color 0.18s;
+}
+.nav-links a:hover { color: var(--heading) }
 
 /* HERO */
-.hero{min-height:100vh;display:grid;place-items:center;padding:8rem 2.5rem 5rem;position:relative;overflow:hidden;}
-.hero-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(ellipse, rgba(212,132,90,0.08) 0%, transparent 70%);top:-100px;right:-100px;pointer-events:none;}
-.hero-glow2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(ellipse, rgba(232,184,122,0.05) 0%, transparent 70%);bottom:0;left:-80px;pointer-events:none;}
-.hero-inner{max-width:800px;width:100%;position:relative;}
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 8rem 2.5rem 5rem;
+  position: relative;
+  overflow: hidden;
+}
+/* subtle corner grid accent — not a radial glow */
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 480px; height: 480px;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 100% 0%, black 30%, transparent 80%);
+  mask-image: radial-gradient(ellipse 60% 60% at 100% 0%, black 30%, transparent 80%);
+  pointer-events: none;
+  opacity: 0.6;
+}
+.hero-inner { max-width: 820px; width: 100%; position: relative; z-index: 1 }
 
-/* PROFILE ROW */
-.hero-profile-row{display:flex;align-items:center;gap:2rem;margin-bottom:1.8rem;opacity:0;animation:fadeUp 0.6s ease forwards 0.1s;}
-.hero-avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);flex-shrink:0;box-shadow:0 0 0 4px rgba(212,132,90,0.12);}
-.hero-eyebrow{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--accent);letter-spacing:0.18em;text-transform:uppercase;}
+.hero-profile-row {
+  display: flex; align-items: center; gap: 1.6rem;
+  margin-bottom: 2rem;
+  opacity: 0; animation: fadeUp 0.5s ease forwards 0.1s;
+}
+.hero-avatar {
+  width: 96px; height: 96px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 1px solid var(--border2);
+  flex-shrink: 0;
+}
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+}
+.hero-eyebrow span {
+  color: var(--accent);
+  margin-right: 0.4rem;
+}
 
-.hero-name{font-family:'Playfair Display',serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:800;color:var(--heading);line-height:1.02;letter-spacing:-0.02em;margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.7s ease forwards 0.25s;}
-.hero-name em{font-style:italic;color:var(--accent);}
-.hero-bio{font-size:1.1rem;color:var(--text);max-width:520px;line-height:1.7;margin-bottom:2.5rem;opacity:0;animation:fadeUp 0.7s ease forwards 0.4s;}
-.hero-bio strong{color:var(--heading);font-weight:500}
-.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.7s ease forwards 0.55s;}
-.btn{font-family:'DM Mono',monospace;font-size:0.78rem;letter-spacing:0.08em;padding:0.75rem 1.6rem;border-radius:3px;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem;cursor:pointer;border:none;}
-.btn-primary{background:var(--accent);color:#16120e;font-weight:500}
-.btn-primary:hover{background:var(--accent2);transform:translateY(-2px)}
-.btn-outline{border:1px solid var(--border2);color:var(--text);background:transparent}
-.btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
-.hero-scroll{position:absolute;bottom:-3rem;left:0;font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);letter-spacing:0.15em;display:flex;align-items:center;gap:0.8rem;opacity:0;animation:fadeUp 0.7s ease forwards 0.8s;}
-.hero-scroll::after{content:'';width:40px;height:1px;background:linear-gradient(to right,var(--muted),transparent);}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.hero-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(3.2rem, 9vw, 7rem);
+  font-weight: 700;
+  color: var(--heading);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.6rem;
+  opacity: 0; animation: fadeUp 0.6s ease forwards 0.22s;
+}
+.hero-name .line2 {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--border2);
+  display: block;
+  position: relative;
+}
+.hero-name .line2.glitch-flash {
+  color: var(--heading);
+  -webkit-text-stroke: 0px transparent;
+  text-shadow: 3px 0 var(--accent), -3px 0 rgba(255,70,70,0.55);
+}
+.hero-name .line2.glitch-dim {
+  color: rgba(232,237,242,0.12);
+  -webkit-text-stroke: 1px var(--border2);
+  text-shadow: none;
+}
+.hero-name .line2.resolved {
+  color: var(--heading);
+  -webkit-text-stroke: 0px transparent;
+  text-shadow: none;
+}
+
+.hero-bio {
+  font-size: 1rem;
+  color: var(--text);
+  max-width: 500px;
+  line-height: 1.75;
+  margin-bottom: 2.5rem;
+  opacity: 0; animation: fadeUp 0.6s ease forwards 0.38s;
+}
+.hero-bio strong { color: var(--heading); font-weight: 500 }
+
+.hero-actions {
+  display: flex; gap: 0.9rem; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp 0.6s ease forwards 0.52s;
+}
+.btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  padding: 0.72rem 1.5rem;
+  border-radius: 3px;
+  transition: all 0.18s;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  cursor: pointer; border: none;
+}
+.btn-primary { background: var(--accent); color: #0d0f12; font-weight: 500 }
+.btn-primary:hover { background: var(--accent2); transform: translateY(-1px) }
+.btn-outline {
+  border: 1px solid var(--border2);
+  color: var(--text);
+  background: transparent;
+}
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.hero-scroll {
+  position: absolute; bottom: -2.5rem; left: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  display: flex; align-items: center; gap: 0.7rem;
+  opacity: 0; animation: fadeUp 0.6s ease forwards 0.8s;
+}
+.hero-scroll::after {
+  content: '';
+  width: 32px; height: 1px;
+  background: linear-gradient(to right, var(--muted), transparent);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px) }
+  to   { opacity: 1; transform: translateY(0) }
+}
 
 /* SECTIONS */
-section{padding:6rem 2.5rem;position:relative;z-index:1;}
-.section-inner{max-width:900px;margin:0 auto}
-.section-label{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.8rem;display:flex;align-items:center;gap:0.8rem;}
-.section-label::before{content:'';display:inline-block;width:20px;height:1px;background:var(--accent);}
-.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:var(--heading);line-height:1.15;letter-spacing:-0.01em;margin-bottom:3rem;}
-.divider{border:none;border-top:1px solid var(--border);margin:0 2.5rem;}
+section { padding: 6rem 2.5rem; position: relative; z-index: 1 }
+.section-inner { max-width: 900px; margin: 0 auto }
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.section-label::before {
+  content: '//';
+  color: var(--accent);
+  font-size: 0.75rem;
+}
+
+.section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  font-weight: 600;
+  color: var(--heading);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 3rem;
+}
+
+.divider { border: none; border-top: 1px solid var(--border); margin: 0 2.5rem }
 
 /* ABOUT */
-#about{background:var(--surface)}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
-.about-text p{margin-bottom:1.2rem;font-size:1rem}
-.about-text p strong{color:var(--heading);font-weight:500}
-.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:0.5rem;}
-.stat-box{padding:1.3rem;border:1px solid var(--border);border-radius:4px;background:var(--surface2);}
-.stat-num{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:0.3rem;}
-.stat-label{font-size:0.78rem;color:var(--muted);font-weight:400;}
-.about-right{display:flex;flex-direction:column;gap:1rem}
-.currently-box{padding:1.5rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 4px 4px 0;background:var(--surface2);}
-.currently-box h4{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.8rem;}
-.currently-box ul{list-style:none;display:flex;flex-direction:column;gap:0.5rem}
-.currently-box li{font-size:0.9rem;color:var(--text);display:flex;align-items:flex-start;gap:0.6rem;}
-.currently-box li::before{content:'→';color:var(--accent);flex-shrink:0;margin-top:0.05rem}
+#about { background: var(--surface) }
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+.about-text p { margin-bottom: 1.1rem; font-size: 0.97rem }
+.about-text p strong { color: var(--heading); font-weight: 500 }
+
+.about-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0;
+}
+.stat-box {
+  padding: 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--surface2);
+}
+.stat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+.stat-label { font-size: 0.75rem; color: var(--muted) }
+
+.about-right { display: flex; flex-direction: column; gap: 1rem }
+
+.currently-box {
+  padding: 1.4rem;
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 3px 3px 0;
+  background: var(--surface2);
+}
+.currently-box h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  color: var(--accent);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+.currently-box ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem }
+.currently-box li {
+  font-size: 0.88rem;
+  color: var(--text);
+  display: flex; align-items: flex-start; gap: 0.6rem;
+}
+.currently-box li::before { content: '→'; color: var(--accent); flex-shrink: 0; margin-top: 0.05rem }
 
 /* PROJECTS */
-#projects{background:var(--bg)}
-.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:1.5rem;}
-.project-card{border:1px solid var(--border);border-radius:4px;background:var(--surface);padding:1.8rem;transition:border-color 0.2s,transform 0.2s;position:relative;overflow:hidden;}
-.project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform 0.3s ease;}
-.project-card:hover{border-color:var(--border2);transform:translateY(-3px)}
-.project-card:hover::before{transform:scaleX(1)}
-.project-card.featured{grid-column:1/-1;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:start;}
-.project-meta{display:flex;align-items:center;gap:0.8rem;margin-bottom:1rem;}
-.project-type{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);background:var(--tag-bg);padding:0.2rem 0.6rem;border-radius:2px;}
-.project-status{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);}
-.project-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--heading);margin-bottom:0.7rem;line-height:1.3;}
-.project-desc{font-size:0.92rem;color:var(--text);margin-bottom:1.2rem;line-height:1.65;}
-.project-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.2rem;}
-.tag{font-family:'DM Mono',monospace;font-size:0.65rem;padding:0.2rem 0.55rem;border-radius:2px;border:1px solid var(--border2);color:var(--muted);}
-.project-link{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--accent);letter-spacing:0.05em;display:inline-flex;align-items:center;gap:0.4rem;transition:gap 0.2s;}
-.project-link:hover{gap:0.7rem}
-.project-card.featured .project-links{display:flex;flex-direction:column;gap:0.6rem;align-items:flex-end;}
+#projects { background: var(--bg) }
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 1.2rem;
+}
+.project-card {
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--surface);
+  padding: 1.8rem;
+  transition: border-color 0.2s, transform 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.project-card:hover { border-color: var(--border2); transform: translateY(-2px) }
+.project-card:hover::before { transform: scaleX(1) }
+.project-card.featured {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  align-items: start;
+}
+.project-meta {
+  display: flex; align-items: center; gap: 0.7rem;
+  margin-bottom: 0.9rem;
+}
+.project-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.63rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--tag-bg);
+  padding: 0.18rem 0.55rem;
+  border-radius: 2px;
+}
+.project-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.63rem;
+  color: var(--muted);
+}
+.project-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--heading);
+  margin-bottom: 0.65rem;
+  line-height: 1.3;
+}
+.project-desc {
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 1.1rem;
+  line-height: 1.65;
+}
+.project-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1.1rem }
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  padding: 0.18rem 0.5rem;
+  border-radius: 2px;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+}
+.project-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.73rem;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  transition: gap 0.18s;
+}
+.project-link:hover { gap: 0.6rem }
+.project-card.featured .project-links {
+  display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-end;
+}
 
 /* BLOG */
-#blog{background:var(--surface)}
-.blog-list{display:flex;flex-direction:column;gap:0}
-.blog-item{display:grid;grid-template-columns:100px 1fr auto;gap:2rem;align-items:baseline;padding:1.5rem 0;border-bottom:1px solid var(--border);transition:background 0.15s;}
-.blog-item:first-child{border-top:1px solid var(--border)}
-.blog-item:hover .blog-title{color:var(--accent)}
-.blog-date{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap;}
-.blog-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--heading);transition:color 0.2s;line-height:1.3;}
-.blog-tag{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--accent);background:var(--tag-bg);padding:0.2rem 0.6rem;border-radius:2px;white-space:nowrap;}
+#blog { background: var(--surface) }
+.blog-list { display: flex; flex-direction: column; gap: 0 }
+.blog-item {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  gap: 2rem;
+  align-items: baseline;
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.blog-item:first-child { border-top: 1px solid var(--border) }
+.blog-item:hover .blog-title { color: var(--accent) }
+.blog-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.blog-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--heading);
+  transition: color 0.18s;
+  line-height: 1.3;
+}
+.blog-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--accent);
+  background: var(--tag-bg);
+  padding: 0.18rem 0.55rem;
+  border-radius: 2px;
+  white-space: nowrap;
+}
 
 /* CERTS */
-#certs{background:var(--bg)}
-.certs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;}
-.cert-card{padding:1.4rem;border:1px solid var(--border);border-radius:4px;background:var(--surface);display:flex;gap:1rem;align-items:flex-start;transition:border-color 0.2s;}
-.cert-card:hover{border-color:var(--border2)}
-.cert-icon{width:36px;height:36px;border-radius:4px;background:var(--tag-bg);display:grid;place-items:center;font-size:1rem;flex-shrink:0;}
-.cert-name{font-size:0.9rem;font-weight:500;color:var(--heading);margin-bottom:0.2rem;line-height:1.3;}
-.cert-issuer{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);}
-.cert-status{display:inline-block;margin-top:0.5rem;font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.15rem 0.5rem;border-radius:2px;}
-.cert-status.earned{background:rgba(100,200,120,0.1);color:#6dc87a}
-.cert-status.inprogress{background:rgba(212,132,90,0.1);color:var(--accent)}
-.skills-strip{margin-top:3rem;padding:2rem;border:1px solid var(--border);border-radius:4px;background:var(--surface);}
-.skills-strip h4{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.2rem;}
-.skills-groups{display:flex;flex-wrap:wrap;gap:2.5rem}
-.skill-group h5{font-size:0.78rem;font-weight:500;color:var(--accent);margin-bottom:0.6rem;}
-.skill-group ul{list-style:none;display:flex;flex-direction:column;gap:0.3rem}
-.skill-group li{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text);}
+#certs { background: var(--bg) }
+.certs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.cert-card {
+  padding: 1.3rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--surface);
+  display: flex; gap: 1rem; align-items: flex-start;
+  transition: border-color 0.2s;
+}
+.cert-card:hover { border-color: var(--border2) }
+.cert-icon {
+  width: 34px; height: 34px;
+  border-radius: 3px;
+  background: var(--tag-bg);
+  display: grid; place-items: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.cert-name { font-size: 0.88rem; font-weight: 500; color: var(--heading); margin-bottom: 0.2rem; line-height: 1.3 }
+.cert-issuer {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+.cert-status {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 0.14rem 0.5rem;
+  border-radius: 2px;
+}
+.cert-status.earned { background: rgba(61,214,140,0.1); color: var(--green) }
+.cert-status.inprogress { background: var(--tag-bg); color: var(--accent) }
+
+.verify-link {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  border: 1px solid rgba(74,158,255,0.25);
+  padding: 0.22rem 0.55rem;
+  border-radius: 2px;
+  margin-top: 0.6rem;
+  transition: background 0.18s;
+}
+.verify-link:hover { background: rgba(74,158,255,0.08) }
+
+.skills-strip {
+  margin-top: 2.5rem;
+  padding: 1.8rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--surface);
+}
+.skills-strip h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+.skills-groups { display: flex; flex-wrap: wrap; gap: 2.5rem }
+.skill-group h5 { font-size: 0.76rem; font-weight: 500; color: var(--accent); margin-bottom: 0.55rem }
+.skill-group ul { list-style: none; display: flex; flex-direction: column; gap: 0.28rem }
+.skill-group li {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text);
+}
 
 /* CONTACT */
-#contact{background:var(--surface);text-align:center;}
-.contact-inner{max-width:540px;margin:0 auto}
-.contact-inner .section-label{justify-content:center}
-.contact-inner .section-label::before{display:none}
-.contact-tagline{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;font-style:italic;color:var(--heading);line-height:1.2;margin-bottom:1rem;}
-.contact-sub{font-size:0.95rem;color:var(--muted);margin-bottom:2.5rem;}
-.contact-links{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
-.contact-link{font-family:'DM Mono',monospace;font-size:0.78rem;letter-spacing:0.06em;padding:0.7rem 1.5rem;border:1px solid var(--border2);border-radius:3px;color:var(--text);display:inline-flex;align-items:center;gap:0.5rem;transition:all 0.2s;}
-.contact-link:hover{border-color:var(--accent);color:var(--accent)}
+#contact { background: var(--surface); text-align: center }
+.contact-inner { max-width: 520px; margin: 0 auto }
+.contact-inner .section-label { justify-content: center }
+.contact-inner .section-label::before { content: '//' }
 
+.contact-tagline {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.6rem, 4vw, 2.3rem);
+  font-weight: 600;
+  color: var(--heading);
+  line-height: 1.2;
+  margin-bottom: 0.9rem;
+  letter-spacing: -0.02em;
+}
+
+.contact-sub { font-size: 0.92rem; color: var(--muted); margin-bottom: 2.2rem }
+.contact-links { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap }
+.contact-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.05em;
+  padding: 0.68rem 1.4rem;
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  color: var(--text);
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: all 0.18s;
+}
+.contact-link:hover { border-color: var(--accent); color: var(--accent) }
 
 /* FOOTER */
-footer{padding:1.5rem 2.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);}
+footer {
+  padding: 1.4rem 2.5rem;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
 
 /* RESPONSIVE */
-@media(max-width:768px){
-  nav{padding:1rem 1.5rem}.nav-links{gap:1.4rem}
-  section{padding:4rem 1.5rem}
-  .about-grid{grid-template-columns:1fr}
-  .project-card.featured{grid-template-columns:1fr;gap:1rem}
-  .project-card.featured .project-links{flex-direction:row;align-items:flex-start}
-  .blog-item{grid-template-columns:1fr;gap:0.4rem}.blog-date{display:none}
-  footer{flex-direction:column;gap:0.5rem;text-align:center}
+@media(max-width:768px) {
+  nav { padding: 1rem 1.5rem }
+  .nav-links { gap: 1.4rem }
+  section { padding: 4rem 1.5rem }
+  .about-grid { grid-template-columns: 1fr }
+  .project-card.featured { grid-template-columns: 1fr; gap: 1rem }
+  .project-card.featured .project-links { flex-direction: row; align-items: flex-start }
+  .blog-item { grid-template-columns: 1fr; gap: 0.3rem }
+  .blog-date { display: none }
+  footer { flex-direction: column; gap: 0.5rem; text-align: center }
 }
-@media(max-width:480px){
-  .nav-links{display:none}
-  .hero-name{font-size:2.6rem}
-  .about-stats{grid-template-columns:1fr 1fr}
-  .hero-avatar{width:58px;height:58px}
+@media(max-width:480px) {
+  .nav-links { display: none }
+  .hero-name { font-size: 2.8rem }
+  .about-stats { grid-template-columns: 1fr 1fr }
+  .hero-avatar { width: 64px; height: 64px }
 }
 </style>
 </head>
@@ -180,18 +589,19 @@ footer{padding:1.5rem 2.5rem;border-top:1px solid var(--border);display:flex;jus
 </nav>
 
 <section class="hero" id="home">
-  <div class="hero-glow"></div>
-  <div class="hero-glow2"></div>
   <div class="hero-inner">
-
     <div class="hero-profile-row">
       <img src="assets/profile.jpg" alt="Likhamba Rongmei" class="hero-avatar"/>
-      <div class="hero-eyebrow">Cyber Security · SOC · CSE Undergraduate · KIIT Bhubaneswar</div>
+      <div class="hero-eyebrow">
+        <span>//</span> Cybersecurity · Blue Team · Offensive Security · CSE Undergraduate · KIIT Bhubaneswar
+      </div>
     </div>
-
-    <h1 class="hero-name">Likhamba<br><em>Rongmei</em></h1>
+    <h1 class="hero-name" id="heroName">
+      Likhamba<br>
+      <span class="line2" id="heroLine2">Rongmei</span>
+    </h1>
     <p class="hero-bio">
-I simulate attacks in controlled environments and analyze system logs to understand how real threats operate. <strong>Cybersecurity</strong> practitioner focused on <strong>SOC workflows</strong>, <strong>threat analysis</strong>, and <strong>system security</strong>.
+      I build labs, run attacks, read the logs, and write it all up. <strong>Cybersecurity</strong> practitioner with hands-on experience in <strong>SOC workflows</strong> and <strong>cloud security</strong> — now actively expanding into <strong>offensive security</strong> and pentesting.
     </p>
     <div class="hero-actions">
       <a href="#projects" class="btn btn-primary">View My Labs →</a>
@@ -209,24 +619,24 @@ I simulate attacks in controlled environments and analyze system logs to underst
     <div class="about-grid">
       <div class="about-text">
         <p>I'm a security practitioner in the making — someone who learns by doing, not just studying. My approach is simple: <strong>build the lab, run the attack, read the logs, write it up.</strong></p>
-        <p>I focus in Cybersecurity and SOC Operations, where most breaches don't happen because of complex exploits - they happen because of human oversight: misconfigured S3 bucket, a forgotten access key, a developer account with one too many permissions.</p>
-        <p>I want to be the person who catches those. So I practice finding them first.</p>
-        <p>Currently preparing for cloud security and SOC analyst roles, with hands-on labs in AWS attack simulation, log analysis, and incident response.</p>
-      </div>
-      <div class="about-right">
-        <div class="about-stats">
+        <p>My foundation is in <strong>blue team and cloud security</strong> — SOC workflows, CloudTrail forensics, SIEM deployment. But I'm deliberately expanding into <strong>offensive security</strong>: working through TryHackMe's Jr Pentester path, learning Burp Suite, web app vulnerabilities, and privilege escalation hands-on.</p>
+        <p>I'm also <strong>Author #2</strong> on a cybersecurity research paper currently under review at Elsevier JNCA — serving as the sole cybersecurity domain lead on an IoT botnet detection study, handling MITRE ATT&CK mapping and adversarial robustness validation.</p>
+        <p>Most breaches aren't exotic. They're a misconfigured S3 bucket, a forgotten access key, one too many permissions. I practice finding those — and now I'm learning to think like the person who exploits them too.</p>
+        <div class="about-stats" style="margin-top:1.6rem">
           <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Attack scenarios built & documented</div></div>
-          <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Security labs</div></div>
-          <div class="stat-box"><div class="stat-num">1</div><div class="stat-label">Automated tools used for detection</div></div>
+          <div class="stat-box"><div class="stat-num">Top 5%</div><div class="stat-label">Globally on TryHackMe</div></div>
+          <div class="stat-box"><div class="stat-num">1</div><div class="stat-label">Research paper under review (Elsevier JNCA)</div></div>
           <div class="stat-box"><div class="stat-num">∞</div><div class="stat-label">Logs read</div></div>
         </div>
+      </div>
+      <div class="about-right">
         <div class="currently-box">
-          <h4>What I am doing</h4>
+          <h4>What I'm doing now</h4>
           <ul>
-            <li>Learning AWS for cloud-based SOC and security workflows </li>
-            <li>Building attack simulation and detection labs</li>
-            <li>Writing about cybersecurity and security concepts</li>
-            <li>Open to SOC and Cloud Security roles</li>
+            <li>TryHackMe Jr Pentester path — Burp Suite, web vulns, privilege escalation</li>
+            <li>Building a web app pentest lab (DVWA / Juice Shop) with a formal findings report</li>
+            <li>AWS cloud security and SOC workflow practice</li>
+            <li>Open to SOC Analyst, Cloud Security, and Jr Pentester roles</li>
           </ul>
         </div>
       </div>
@@ -238,24 +648,23 @@ I simulate attacks in controlled environments and analyze system logs to underst
 
 <section id="projects">
   <div class="section-inner">
-    <div class="section-label">Labs & Projects</div>
+    <div class="section-label">Labs &amp; Projects</div>
     <h2 class="section-title">Things I've actually built.</h2>
     <div class="projects-grid">
-
       <div class="project-card featured">
         <div>
           <div class="project-meta">
             <span class="project-type">Featured Lab</span>
             <span class="project-status">Complete</span>
           </div>
-          <div class="project-title">AWS Cloud SOC Lab — Attack Simulation & Detection</div>
+          <div class="project-title">AWS Cloud SOC Lab — Attack Simulation &amp; Detection</div>
           <p class="project-desc">Simulated three real-world cloud attacks against a live AWS environment — IAM privilege escalation, S3 public exposure, and EC2 persistence. Investigated each one manually through raw CloudTrail logs with zero automated tooling. Includes full incident response and remediation.</p>
           <div class="project-tags">
             <span class="tag">AWS CloudTrail</span>
             <span class="tag">IAM</span>
             <span class="tag">S3</span>
             <span class="tag">EC2</span>
-            <span class="tag">MITRE ATT&CK</span>
+            <span class="tag">MITRE ATT&amp;CK</span>
             <span class="tag">Incident Response</span>
           </div>
         </div>
@@ -280,44 +689,61 @@ I simulate attacks in controlled environments and analyze system logs to underst
         </div>
         <a class="project-link" href="https://github.com/Likhamba-Rongmei/Wazuh-SIEM-Implementation" target="_blank">GitHub →</a>
       </div>
-      
-      <div class="project-card">
-  <div class="project-meta">
-    <span class="project-type">Internship Assessment</span>
-    <span class="project-status">Complete</span>
-  </div>
-  <div class="project-title">Tamper-Evident Logging & Honeypot System</div>
-  <p class="project-desc">Tamper-evident logging and attacker deception honeypot, built as part of a cybersecurity internship assessment.</p>
-  <div class="project-tags">
-    <span class="tag">Python</span>
-    <span class="tag">Flask</span>
-    <span class="tag">Hash Chaining</span>
-    <span class="tag">Honeypot</span>
-    <span class="tag">Log Integrity</span>
-    <span class="tag">Deception Security</span>
-  </div>
-  <div class="project-links">
-    <a class="project-link" href="https://github.com/Likhamba-Rongmei/cybersecurity-internship-assessment" target="_blank">GitHub → </a>
-    <a class="project-link" href="#blog">&nbsp &nbsp &nbsp Read Report →</a>
-  </div>
-</div>
 
-      <div class="project-card" style="border-style:dashed;opacity:0.5">
-        <div class="project-meta"><span class="project-type">Coming Soon</span></div>
-        <div class="project-title">Next Lab</div>
-        <p class="project-desc">Always building something new. Check back soon or follow on LinkedIn for updates as labs go live.</p>
+      <div class="project-card">
+        <div class="project-meta">
+          <span class="project-type">Internship Assessment</span>
+          <span class="project-status">Complete</span>
+        </div>
+        <div class="project-title">Tamper-Evident Logging &amp; Honeypot System</div>
+        <p class="project-desc">Tamper-evident logging and attacker deception honeypot, built as part of a cybersecurity internship assessment. Combines hash-chained log integrity with a Flask-based honeypot for attacker fingerprinting.</p>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Flask</span>
+          <span class="tag">Hash Chaining</span>
+          <span class="tag">Honeypot</span>
+          <span class="tag">Log Integrity</span>
+          <span class="tag">Deception Security</span>
+        </div>
+        <div class="project-links" style="display:flex;gap:0.8rem;margin-top:0.2rem">
+          <a class="project-link" href="https://github.com/Likhamba-Rongmei/cybersecurity-internship-assessment" target="_blank">GitHub →</a>
+          <a class="project-link" href="#blog">Read Report →</a>
+        </div>
       </div>
 
+      <div class="project-card">
+        <div class="project-meta">
+          <span class="project-type">Learning Path</span>
+          <span class="project-status">In Progress</span>
+        </div>
+        <div class="project-title">TryHackMe — Jr Penetration Tester</div>
+        <p class="project-desc">Working through TryHackMe's structured Jr Pentester path — covering web app vulnerabilities (OWASP Top 10, Burp Suite), network recon, Metasploit, privilege escalation on Linux and Windows, and Active Directory basics. Top 5% globally.</p>
+        <div class="project-tags">
+          <span class="tag">Burp Suite</span>
+          <span class="tag">Metasploit</span>
+          <span class="tag">Nmap</span>
+          <span class="tag">Privilege Escalation</span>
+          <span class="tag">Active Directory</span>
+          <span class="tag">OWASP Top 10</span>
+        </div>
+        <a class="project-link" href="https://tryhackme.com/p/Likhamba" target="_blank">TryHackMe Profile →</a>
+      </div>
+
+      <div class="project-card" style="border-style:dashed;opacity:0.4">
+        <div class="project-meta"><span class="project-type">Coming Soon</span></div>
+        <div class="project-title">Web App Pentest Lab</div>
+        <p class="project-desc">Formal pentest report against DVWA / Juice Shop — CVSS-scored findings, Burp Suite evidence, executive summary. Building this next.</p>
+      </div>
     </div>
   </div>
 </section>
 
 <hr class="divider"/>
 
-<section id="blog"> 
+<section id="blog">
   <div class="section-inner">
     <div class="section-label">Writing</div>
-    <h2 class="section-title">Writeups & thinking out loud.</h2>
+    <h2 class="section-title">Writeups &amp; thinking out loud.</h2>
     <div class="blog-list">
       <a class="blog-item" href="https://www.linkedin.com/pulse/i-hacked-my-own-aws-account-heres-what-logs-showed-likhamba-rongmei-wucef" target="_blank">
         <span class="blog-date">Mar 2026</span>
@@ -326,13 +752,17 @@ I simulate attacks in controlled environments and analyze system logs to underst
       </a>
       <a class="blog-item" href="https://drive.google.com/file/d/1IhFrbBBS4DO6x9ghfimmbQ_oNd5b5Agk/view?usp=sharing" target="_blank">
         <span class="blog-date">Apr 2026</span>
-        <span class="blog-title">Tamper-Evident Logging & Honeypot — Internship Assessment Report</span>
+        <span class="blog-title">Tamper-Evident Logging &amp; Honeypot — Internship Assessment Report</span>
         <span class="blog-tag">Internship</span>
       </a>
-
-      <a class="blog-item" href="https://www.linkedin.com/in/likhamba-rongmei/" target="_blank" style="opacity:0.4;">
+      <a class="blog-item" href="#" target="_blank">
+        <span class="blog-date">2026</span>
+        <span class="blog-title">TCH-Net: Heterogeneous Multi-Dataset Benchmark for IoT Botnet Detection — Under Review, Elsevier JNCA</span>
+        <span class="blog-tag">Research</span>
+      </a>
+      <a class="blog-item" href="https://www.linkedin.com/in/likhamba-rongmei/" target="_blank" style="opacity:0.4">
         <span class="blog-date">Soon</span>
-        <span class="blog-title">More writeups coming — follow along on LinkedIn</span>
+        <span class="blog-title">TryHackMe room writeups coming — follow along on LinkedIn</span>
         <span class="blog-tag">Upcoming</span>
       </a>
     </div>
@@ -343,35 +773,40 @@ I simulate attacks in controlled environments and analyze system logs to underst
 
 <section id="certs">
   <div class="section-inner">
-    <div class="section-label">Certifications & Skills</div>
-    <h2 class="section-title">What I'm learning & what I know.</h2>
+    <div class="section-label">Certifications &amp; Skills</div>
+    <h2 class="section-title">What I'm learning &amp; what I know.</h2>
     <div class="certs-grid">
-
       <div class="cert-card">
         <div class="cert-icon">
-          <img src="assets/security-plus.png" alt="CompTIA Security+" style="width:36px;height:36px;object-fit:contain;border-radius:4px"/>
+          <img src="assets/security-plus.png" alt="CompTIA Security+" style="width:34px;height:34px;object-fit:contain;border-radius:3px"/>
         </div>
         <div class="cert-body">
           <div class="cert-name">CompTIA Security+</div>
-          <div class="cert-issuer">CompTIA</div>
-          <span class="cert-status earned">Earned</span>
-          <div style="margin-top:0.6rem">
-            <a href="https://www.credly.com/badges/4d6f6fe6-6885-4372-afb8-be4be5df92d6/public_url" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.06em;color:var(--accent);border:1px solid rgba(212,132,90,0.3);padding:0.25rem 0.6rem;border-radius:2px;transition:all 0.2s" onmouseover="this.style.background='rgba(212,132,90,0.1)'" onmouseout="this.style.background='transparent'">
-              ✓ Verify on Credly
-            </a>
-          </div>
+          <div class="cert-issuer">CompTIA · Jan 2026</div>
+          <span class="cert-status earned">Earned</span><br/>
+          <a href="https://www.credly.com/badges/4d6f6fe6-6885-4372-afb8-be4be5df92d6/public_url" target="_blank" class="verify-link">✓ Verify on Credly</a>
         </div>
       </div>
-
       <div class="cert-card">
-        <div class="cert-icon">☁️</div>
+        <div class="cert-icon">
+            <img src="assets/aws.png" alt="aws">
+        </div>
         <div class="cert-body">
           <div class="cert-name">AWS Certified Cloud Practitioner</div>
           <div class="cert-issuer">Amazon Web Services</div>
           <span class="cert-status inprogress">Course Completed</span>
         </div>
       </div>
-
+      <div class="cert-card">
+        <div class="cert-icon">
+            <img src="assets/tryhackme.png" alt="tryhackme">
+        </div>
+        <div class="cert-body">
+          <div class="cert-name">Jr Penetration Tester Path</div>
+          <div class="cert-issuer">TryHackMe · Top 5% globally</div>
+          <span class="cert-status inprogress">In Progress</span>
+        </div>
+      </div>
     </div>
 
     <div class="skills-strip">
@@ -379,19 +814,23 @@ I simulate attacks in controlled environments and analyze system logs to underst
       <div class="skills-groups">
         <div class="skill-group">
           <h5>Cloud</h5>
-          <ul><li>AWS IAM</li><li>CloudTrail</li><li>S3 · EC2</li><li>Security Groups</li></ul>
+          <ul><li>AWS IAM</li><li>CloudTrail</li><li>S3 · EC2 · VPC</li><li>GuardDuty · WAF</li><li>Security Hub · KMS</li></ul>
         </div>
         <div class="skill-group">
-          <h5>Security</h5>
-          <ul><li>Log Analysis</li><li>Incident Response</li><li>MITRE ATT&CK</li><li>Threat Detection</li></ul>
+          <h5>Blue Team</h5>
+          <ul><li>Log Analysis</li><li>Incident Response</li><li>MITRE ATT&amp;CK</li><li>Alert Triage</li><li>Threat Detection</li></ul>
+        </div>
+        <div class="skill-group">
+          <h5>Offensive</h5>
+          <ul><li>Burp Suite</li><li>Metasploit</li><li>Nmap</li><li>OWASP Top 10</li><li>Privilege Escalation</li><li>Web App Testing</li></ul>
         </div>
         <div class="skill-group">
           <h5>Tools</h5>
-          <ul><li>AWS CLI</li><li>Wazuh SIEM</li><li>Linux / Bash</li><li>Git / GitHub</li></ul>
+          <ul><li>Wazuh SIEM</li><li>AWS CLI</li><li>Wireshark</li><li>Linux / Bash</li><li>Git / GitHub</li></ul>
         </div>
         <div class="skill-group">
-          <h5>Concepts</h5>
-          <ul><li>IAM Privilege Escalation</li><li>S3 Misconfiguration</li><li>EC2 Persistence</li><li>Raw Log Forensics</li></ul>
+          <h5>Programming</h5>
+          <ul><li>Python</li><li>Bash</li><li>C · Java</li><li>HTML / CSS</li></ul>
         </div>
       </div>
     </div>
@@ -403,15 +842,17 @@ I simulate attacks in controlled environments and analyze system logs to underst
 <section id="contact">
   <div class="section-inner contact-inner">
     <div class="section-label">Contact</div>
-    <div class="contact-tagline">"Let's talk security."</div>
-    <p class="contact-sub">Open to SOC Analyst and Cloud Security roles. Always happy to talk about labs, career paths, or anything security.</p>
+    <div class="contact-tagline">Let's talk security.</div>
+    <p class="contact-sub">Open to SOC Analyst, Cloud Security, and Jr Pentester roles. Always happy to talk about labs, writeups, research, or career paths.</p>
     <div class="contact-links">
       <a class="contact-link" href="mailto:likhambarong@gmail.com">likhambarong@gmail.com</a>
       <a class="contact-link" href="https://linkedin.com/in/likhamba-rongmei" target="_blank">
-        <img src="assets/linkedin.png" alt="LinkedIn" style="height: 19px; width: 19px; object-fit: contain; vertical-align: middle;">LinkedIn
+        <img src="assets/linkedin.png" alt="LinkedIn" style="height:17px;width:17px;object-fit:contain">
+        LinkedIn
       </a>
       <a class="contact-link" href="https://github.com/Likhamba-Rongmei" target="_blank">
-        <img src="assets/github.png" alt="GitHub" style="height: 25px; width: 25px; object-fit: contain; vertical-align: middle;">GitHub
+        <img src="assets/github.png" alt="GitHub" style="height:18px;width:18px;object-fit:contain">
+        GitHub
       </a>
     </div>
   </div>
@@ -421,6 +862,35 @@ I simulate attacks in controlled environments and analyze system logs to underst
   <span>© 2026 Likhamba Rongmei</span>
   <span>Built with intent. Hosted on GitHub Pages.</span>
 </footer>
+
+<script>
+  // Glitch flicker sequence — fires once on load, never loops
+  window.addEventListener('load', () => {
+    const el = document.getElementById('heroLine2');
+    if (!el) return;
+
+    // Schedule a sequence of on/off flashes, then resolve solid
+    const sequence = [
+      // [delay ms, class to apply]
+      [600,  'glitch-flash'],
+      [680,  'glitch-dim'],
+      [760,  'glitch-flash'],
+      [820,  'glitch-dim'],
+      [870,  'glitch-flash'],
+      [910,  'glitch-dim'],
+      [940,  'glitch-flash'],
+      [970,  'glitch-dim'],
+      [1000, 'glitch-flash'],
+      [1040, 'resolved'],   // final lock-in
+    ];
+
+    sequence.forEach(([delay, cls]) => {
+      setTimeout(() => {
+        el.className = 'line2 ' + cls;
+      }, delay);
+    });
+  });
+</script>
 
 </body>
 </html>
